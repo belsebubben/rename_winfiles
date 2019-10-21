@@ -1,0 +1,62 @@
+#!/usr/bin/python
+#coding=UTF-8
+
+import glob
+import os
+import re
+import sys
+import pprint
+
+remove_chars = ', + ? = ) ( [ ] { } & % ¤ $ £ # " ! @ ` ´ \' ; '.split()
+
+multi_underscores = re.compile(r'(.*)_+(.*)')
+
+multi_dots = re.compile(r'(.*)\.+(.*)')
+
+# Get the initial list of files
+def createfilelist(dir='.'):
+   filelist = glob.glob('*')
+   return filelist
+
+#Create a new filename
+def newfilename(filename):
+   # print filename
+   filename = filename.strip()
+   for char in remove_chars:
+      filename = filename.replace(char, "_")
+   filename = filename.replace(" ", "_")
+   filename = filename.replace("._", "_")
+   filename = filename.replace("__", "_")
+   filename = filename.replace("__", "_")
+   filename = filename.replace("_-_", "_")
+   filename = filename.replace("..", ".")
+   filename = filename.replace("..", ".")
+   filename = filename.strip("_")
+   return filename
+
+# renamefiles
+def renamefiles(filelist):
+   nr_of_renamed_files = 0
+   filedict = {}
+   for file in filelist:
+      filedict[file] = newfilename(file)
+   pp = pprint.PrettyPrinter(indent=4)
+   pp.pprint(filedict)
+   print('Renamed files:')
+   for file in filedict.keys():
+      if file != filedict[file]:
+         print(file.ljust(50), "\t--->\t", filedict[file].ljust(50))
+         nr_of_renamed_files += 1
+      os.rename(file, filedict[file])
+   if nr_of_renamed_files > 0:
+      print("Renamed %s files." % nr_of_renamed_files)
+   else:
+      print("No renamed files.")
+      exit(0)
+
+if __name__ == '__main__':
+   filelist = createfilelist()
+   renamefiles(filelist)
+   exit(0)
+
+

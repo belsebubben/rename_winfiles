@@ -1,0 +1,8 @@
+#!/bin/bash
+rename_winfiles.py
+for dir in $(find . -type d);do
+   pushd "$dir"
+   rename_winfiles
+   popd
+done
+
